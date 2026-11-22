@@ -1,0 +1,11 @@
+DEPLOYMENT CONFIRMATION — OWASP Juice Shop
+==========================================
+Container:
+bkimminich/juice-shop:latest  |  Up 24 seconds  |  ports: 0.0.0.0:3000->3000/tcp, [::]:3000->3000/tcp
+
+Reachability (bound to host loopback / internal docker network only):
+  http://127.0.0.1:3000/  -> HTTP 200
+  App title tag:
+    <title>OWASP Juice Shop</title>
+  REST API health (version):
+{"version":"20.4.0-SNAPSHOT"}
